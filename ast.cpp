@@ -22,6 +22,7 @@ string nextTemp()
 			vars[temps[i]] = 1;
 			return temps[i];
 		}
+	return "";
 }
 
 void NumExpr::generateCode(returnValue_t * rv)
@@ -48,7 +49,7 @@ void IdExpr::generateCode(returnValue_t * rv)
 	rv->place = (char*)malloc(r.size()+1);
 	strcpy(rv->place,r.c_str());
 
-	string code = "lw " + r + ", (" + id + ")";
+	string code = "lw " + r + ", " + id;
 	rv->code = (char*)malloc(code.size()+1);
 	strcpy(rv->code,code.c_str());
 	
@@ -71,12 +72,12 @@ void AddExpr::generateCode(returnValue_t * rv)
 
 	string r = nextTemp();
 
-	if (expr1->getKind() == NUM_EXPR && expr2->getKind() == NUM_EXPR)
-	{
-		int val = expr1->evaluate() + expr2->evaluate();
-		string folded = "" + val;
+	// if (expr1->getKind() == NUM_EXPR && expr2->getKind() == NUM_EXPR)
+	// {
+	// 	int val = expr1->evaluate() + expr2->evaluate();
+	// 	string folded = "" + val;
 
-	}
+	// }
 
 	code += "add " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
 
