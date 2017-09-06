@@ -22,28 +22,6 @@ string nextTemp()
 			vars[temps[i]] = 1;
 			return temps[i];
 		}
-
-	// if(countTemp==10)
-	// 	countTemp=0;
-
-	// char buffer[2];
-	// sprintf(buffer,"%d",countTemp);
-	// string next = "$t"+string(buffer);
-	// // if(countTemp==3)
-	// // {
-	// // 	countTemp=2;
-	// // 	string r = "$t2";
-	// // 	releaseTemp(r);
-	// // 	next = r;
-	// // }
-	// if(vars.find(next) == vars.end() || vars[next] == 0)
-	// {
-	// 	vars[next] = 1;
-	// 	// printf("%d\n", countTemp);
-	// 	countTemp++;
-	// 	return next;
-	// }
-
 }
 
 void NumExpr::generateCode(returnValue_t * rv)
@@ -92,6 +70,13 @@ void AddExpr::generateCode(returnValue_t * rv)
 	releaseTemp(right_rv->place);
 
 	string r = nextTemp();
+
+	if (expr1->getKind() == NUM_EXPR && expr2->getKind() == NUM_EXPR)
+	{
+		int val = expr1->evaluate() + expr2->evaluate();
+		string folded = "" + val;
+
+	}
 
 	code += "add " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
 

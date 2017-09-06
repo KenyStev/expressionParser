@@ -14,6 +14,18 @@ void yyerror(const char *str)
     printf("Line %d: %s\n", yylineno, str);
 }
 
+Expr* getExpression(Expr*expr1,Expr*expr2)
+{
+	if (expr1->getKind() == NUM_EXPR && expr2->getKind() == NUM_EXPR)
+	{
+		int val = ((NumExpr*)expr1)->value + ((NumExpr*)expr2)->value;
+		string s = ""+val;
+		char*ss = (char*)malloc(s.size()+1);
+		strcpy(ss,s.c_str());
+		return new NumExpr(ss);
+	}
+}
+
 #define YYERROR_VERBOSE 1
 
 //Statement *input;
@@ -39,13 +51,13 @@ input:	E 		{
 	printf("place: %s\n", rv->place); }
 ;
 
-E: 	  E '+' F	{ $$ = new AddExpr($1,$3); }
-	| E '-' F 	{ $$ = new SubExpr($1,$3); }
+E: 	  E '+' F	{ $$ = getExpression($1,$3); }
+	| E '-' F 	{ $$ = getExpression($1,$3); }
 	| F			{ $$ = $1; }
 ;
 
-F:    F '*' T 	{ $$ = new MultExpr($1,$3); }
-	| F '/' T 	{ $$ = new DivExpr($1,$3); }
+F:    F '*' T 	{ $$ = getExpression($1,$3); }
+	| F '/' T 	{ $$ = getExpression($1,$3); }
 	| T 		{ $$ = $1; }
 ;
 
