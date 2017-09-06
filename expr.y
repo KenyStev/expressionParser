@@ -26,6 +26,7 @@ Expr* getExpression(Expr*expr1,Expr*expr2,ExprKind kind)
 			case SUB_EXPR: val = v1 - v2; break;
 			case MULT_EXPR: val = v1 * v2; break;
 			case DIV_EXPR: val = v1 / v2; break;
+			default: return NULL;
 		}
 
 		char buffer[10];
@@ -42,6 +43,7 @@ Expr* getExpression(Expr*expr1,Expr*expr2,ExprKind kind)
 			case SUB_EXPR: return new SubExpr(expr1,expr2);
 			case MULT_EXPR: return new MultExpr(expr1,expr2);
 			case DIV_EXPR: return new DivExpr(expr1,expr2);
+			default: return NULL;
 		}
 	}
 }

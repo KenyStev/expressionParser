@@ -36,9 +36,6 @@ void NumExpr::generateCode(returnValue_t * rv)
 	string code = "li " + r + ", " + lexeme;
 	rv->code = (char*)malloc(code.size()+1);
 	strcpy(rv->code,code.c_str());
-
-	// printf("code: %s\n", rv->code);
-	// printf("place: %s\n", rv->place);
 }
 
 void IdExpr::generateCode(returnValue_t * rv)
@@ -52,9 +49,6 @@ void IdExpr::generateCode(returnValue_t * rv)
 	string code = "lw " + r + ", " + id;
 	rv->code = (char*)malloc(code.size()+1);
 	strcpy(rv->code,code.c_str());
-	
-	// printf("code: %s\n", rv->code);
-	// printf("place: %s\n", rv->place);
 }
 
 void AddExpr::generateCode(returnValue_t * rv)
@@ -72,14 +66,18 @@ void AddExpr::generateCode(returnValue_t * rv)
 
 	string r = nextTemp();
 
-	// if (expr1->getKind() == NUM_EXPR && expr2->getKind() == NUM_EXPR)
-	// {
-	// 	int val = expr1->evaluate() + expr2->evaluate();
-	// 	string folded = "" + val;
+	if (expr1->getKind() == NUM_EXPR)
+	{
+		code = string(right_rv->code) + "\n";
+		code += "addi " + r + ", " + string(right_rv->place) + ", " + string(((NumExpr*)expr1)->lexeme);
+	}else if(expr2->getKind() == NUM_EXPR)
+	{
+		string(left_rv->code) + "\n";
+		code += "addi " + r + ", " + string(left_rv->place) + ", " + string(((NumExpr*)expr2)->lexeme);
+	}else{
+		code += "add " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
+	}
 
-	// }
-
-	code += "add " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
 
 	rv->place = (char*)malloc(r.size());
 	strcpy(rv->place,r.c_str());
@@ -91,9 +89,6 @@ void AddExpr::generateCode(returnValue_t * rv)
 	free(right_rv->place);
 	free(left_rv);
 	free(right_rv);
-
-	// printf("code: %s\n", rv->code);
-	// printf("place: %s\n", rv->place);
 }
 
 void SubExpr::generateCode(returnValue_t * rv)
@@ -120,12 +115,9 @@ void SubExpr::generateCode(returnValue_t * rv)
 	strcpy(rv->code,code.c_str());
 
 	free(left_rv->code);
-	free(right_rv->place);
+	free(right_rv->place); 
 	free(left_rv);
 	free(right_rv);
-
-	// printf("code: %s\n", rv->code);
-	// printf("place: %s\n", rv->place);
 }
 
 void MultExpr::generateCode(returnValue_t * rv)
@@ -156,9 +148,6 @@ void MultExpr::generateCode(returnValue_t * rv)
 	free(right_rv->place);
 	free(left_rv);
 	free(right_rv);
-
-	// printf("code: %s\n", rv->code);
-	// printf("place: %s\n", rv->place);
 }
 
 void DivExpr::generateCode(returnValue_t * rv)
@@ -189,7 +178,4 @@ void DivExpr::generateCode(returnValue_t * rv)
 	free(right_rv->place);
 	free(left_rv);
 	free(right_rv);
-
-	// printf("code: %s\n", rv->code);
-	// printf("place: %s\n", rv->place);
 }

@@ -8,6 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DEF_BINARY_EXPR(name,pref,op) class name##Expr: public BinaryExpr { \
+public: \
+    name##Expr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {} \
+    int evaluate() { return expr1->evaluate() op expr2->evaluate(); } \
+    int getKind() { return pref##_EXPR; } \
+    void generateCode(returnValue_t * rv); }; \
+
 using namespace std;
 
 extern map<string, int> vars;
@@ -49,45 +56,10 @@ public:
     Expr *expr2;
 };
 
-class AddExpr: public BinaryExpr {
-public:
-    AddExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int evaluate() { return expr1->evaluate() + expr2->evaluate(); }
-    int getKind() { return ADD_EXPR; }
-
-    void generateCode(returnValue_t * rv);
-};
-
-class SubExpr: public BinaryExpr {
-public:
-    SubExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int evaluate() { return expr1->evaluate() - expr2->evaluate(); }
-    int getKind() { return SUB_EXPR; }
-
-    void generateCode(returnValue_t * rv);
-};
-
-class MultExpr: public BinaryExpr {
-public:
-    MultExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int evaluate() { return expr1->evaluate() * expr2->evaluate(); }
-    int getKind() { return MULT_EXPR; }
-
-    void generateCode(returnValue_t * rv);
-};
-
-class DivExpr: public BinaryExpr {
-public:
-    DivExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
-    int evaluate() { return expr1->evaluate() / expr2->evaluate(); }
-    int getKind() { return DIV_EXPR; }
-
-    void generateCode(returnValue_t * rv);
-};
+DEF_BINARY_EXPR(Add,ADD,+);
+DEF_BINARY_EXPR(Sub,SUB,-);
+DEF_BINARY_EXPR(Mult,MULT,*);
+DEF_BINARY_EXPR(Div,DIV,/);
 
 class NumExpr: public Expr {
 public:
