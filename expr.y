@@ -69,8 +69,8 @@ Expr* getExpression(Expr*expr1,Expr*expr2,ExprKind kind)
 input:	E 		{ 
 	returnValue_t *rv = new returnValue_t(); 
 	$$ = $1; $$->generateCode(rv);
-	printf("code: \n%s\n", rv->code);
-	printf("place: %s\n", rv->place); }
+	printf("code: \n\n%s\n", rv->code);
+	printf("\nplace: %s\n", rv->place); }
 ;
 
 E: 	  E '+' F	{ $$ = getExpression($1,$3,ADD_EXPR); }

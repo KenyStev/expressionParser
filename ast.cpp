@@ -72,7 +72,7 @@ void AddExpr::generateCode(returnValue_t * rv)
 		code += "addi " + r + ", " + string(right_rv->place) + ", " + string(((NumExpr*)expr1)->lexeme);
 	}else if(expr2->getKind() == NUM_EXPR)
 	{
-		string(left_rv->code) + "\n";
+		code = string(left_rv->code) + "\n";
 		code += "addi " + r + ", " + string(left_rv->place) + ", " + string(((NumExpr*)expr2)->lexeme);
 	}else{
 		code += "add " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
@@ -106,7 +106,21 @@ void SubExpr::generateCode(returnValue_t * rv)
 
 	string r = nextTemp();
 
-	code += "sub " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
+	// if (expr1->getKind() == NUM_EXPR)
+	// {
+	// 	code = string(right_rv->code) + "\n";
+	// 	int val = ((NumExpr*)expr1)->value*-1;
+	// 	char buf[10];
+	// 	sprintf(buf,"%d",val);
+	// 	code += "addi " + r + ", " + string(right_rv->place) + ", " + string(buf);
+	// }else if(expr2->getKind() == NUM_EXPR)
+	// {
+	// 	code = string(left_rv->code) + "\n";
+	// 	code += "addi " + r + ", " + string(left_rv->place) + ", " + string(((NumExpr*)expr2)->lexeme);
+	// }else{
+	// 	code += "sub " + r + ", " + string(left_rv->place) + ", " + string(right_rv->place);
+	// }
+
 
 	rv->place = (char*)malloc(r.size());
 	strcpy(rv->place,r.c_str());
