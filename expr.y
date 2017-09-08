@@ -48,29 +48,47 @@ Expr* getExpression(Expr*expr1,Expr*expr2,ExprKind kind)
 	}
 }
 
+Statement *input;
+
 #define YYERROR_VERBOSE 1
 
-//Statement *input;
 %}
 
 %union {
 	int num_t;
 	char *id_t;
-	Expr *expr_t;
+	Statement *statement_t;
+	BlockStatement *blkstatement_t;
+    Expr *expr_t;
+    ExprList *exprlist_t;
 }
 
 %token<num_t> TK_ERROR TK_EOL
 %token<id_t> TK_ID TK_NUM
 
-%type<expr_t> E F T input
+%type<expr_t> E F T
+%type<statement_t> input statement expression_statement
+%type<blkstatement_t> statement_list
 
 %%
 
-input:	E 		{ 
+input: statement_list 	{ input = $1; }
+;
+
+statement_list: statement_list statement 	{ $$ = $1; $$->add($2); }
+              | statement 					{ $$ = new BlockStatement; $$->add($1); }
+;
+
+statement: expression_statement ';' { $$ = $1; }
+;
+
+expression_statement:	E 		{ 
 	returnValue_t *rv = new returnValue_t(); 
-	$$ = $1; $$->generateCode(rv);
-	printf("code: \n\n%s\n", rv->code);
-	printf("\nplace: %s\n", rv->place); }
+	$$ = new ExpressionStatement($1); 
+	//$$->generateCode(rv);
+	//printf("code: \n\n%s\n", rv->code);
+	//printf("\nplace: %s\n", rv->place); 
+	}
 ;
 
 E: 	  E '+' F	{ $$ = getExpression($1,$3,ADD_EXPR); }

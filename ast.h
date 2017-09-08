@@ -82,4 +82,42 @@ public:
     string id;
 };
 
+enum StatementKind {
+    EXPRESSION_STATEMENT,
+    BLOCK_STATEMENT,
+    PRINT_STATEMENT,
+    ASSIGN_STATEMENT,
+    IF_STATEMENT,
+    WHILE_STATEMENT,
+    FOR_STATEMENT
+};
+
+class Statement {
+public:
+    virtual void execute() = 0;
+    virtual StatementKind getKind() = 0;
+};
+
+class BlockStatement: public Statement {
+public:
+    BlockStatement() {}
+    void execute();
+    StatementKind getKind() { return BLOCK_STATEMENT; }
+    void add(Statement *st) { stList.push_back(st); }
+
+    list<Statement *> stList;
+};
+
+class ExpressionStatement : public Statement
+{
+public:
+    ExpressionStatement(Expr*expr){ this->expr = expr; }
+    ~ExpressionStatement();
+    
+    void execute();
+    StatementKind getKind() { return EXPRESSION_STATEMENT; }
+
+    Expr*expr;
+};
+
 #endif

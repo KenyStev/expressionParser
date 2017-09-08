@@ -193,3 +193,20 @@ void DivExpr::generateCode(returnValue_t * rv)
 	free(left_rv);
 	free(right_rv);
 }
+
+void BlockStatement::execute()
+{
+    list<Statement *>::iterator it = stList.begin();
+
+    while (it != stList.end()) {
+        Statement *st = *it;
+
+        st->execute();
+        it++;
+    }
+}
+
+void ExpressionStatement::execute()
+{
+	
+}
